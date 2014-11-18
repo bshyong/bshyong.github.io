@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+      WebFont.load({
+        google: {
+          families: ['Source Sans Pro:400,400italic,600,600italic']
+        }
+      });
+    </script>
+    <link href="application.css" media="screen" rel="stylesheet" />
+  </head>
+  <style>
+    html { 
+    background: url(5.jpeg) no-repeat 0px center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    }
+  </style>
+  <body class="">
+    <div class="navbar navbar-default navbar-static-top omega">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#platform-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">
+            <span class="icon icon-logo-filled"></span>
+            <span class="sr-only">Assembly</span>
+          </a>
+        </div>
+        <div class="collapse navbar-collapse" id="platform-navbar-collapse">
+          <ul class="nav navbar-nav">
+
+            <li class="">
+              <a href="/discover">Products</a>
+            </li>
+
+            <li class="">
+              <a href="/discover/updates">What’s Happening</a>
+            </li>
+
+            <li class="">
+              <a href="/discover/bounties">Hot Bounties</a>
+            </li>
+
+          </ul>
+
+            <div class="navbar-right">
+              <a class="btn btn-success navbar-btn" href="/signup">
+                Sign up
+              </a>
+            </div>
+
+            <div class="navbar-right">
+              <ul class="nav nav-tabs navbar-nav">
+                <li>
+                  <a href="/login">
+                    Log in
+                  </a>
+                </li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- NAVBAR END -->
+    <div class="modal equator">
+      <div class="equator-container">
+        <div class="modal-dialog">
+          <div class="text-center">
+            <div class="modal-body">
+              <h2>We can't find what you are looking for</h2>
+                <form action="http://assembly.com/search">
+                  <div class="form-group has-feedback">
+                    <div class="input-group-search">
+                      <input type="search" name="q" value="" placeholder="Search" class="form-control" autocomplete="off">
+                      <span class="icon icon-magnifier form-control-feedback"></span>
+                    </div>
+                    <input type="hidden" name="type" value="">
+                  </div>
+                  <button type="submit" class="btn btn-default sr-only">Search</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
