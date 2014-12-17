@@ -21,9 +21,10 @@ small.top = 20;
 small.xax_count = 5;
 
 
-function comment_histogram(upper_bound){
+function comment_histogram(bins, upper_bound){
   d3.json('./comment_histogram.json', function(data) {
 
+    bins = typeof bins !== 'undefined' ? bins : 12;
     upper_bound = typeof upper_bound !== 'undefined' ? upper_bound : 20160;
     // keep products with response less than 14 days
     data = data.filter(function(d){return d.cr < upper_bound});
@@ -36,7 +37,7 @@ function comment_histogram(upper_bound){
       width: trunk.width * 2,
       height: trunk.height * 2,
       right: trunk.right,
-      bins: 12,
+      bins: bins,
       bar_margin: 5,
       target: '#responsiveness-bins',
       x_accessor: 'cr',
@@ -96,9 +97,9 @@ function bullets(){
         .attr("dy", "1em")
         .text(function(d) { return d.subtitle; });
 
-    d3.selectAll("button").on("click", function() {
-      svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
-    });
+    // d3.selectAll("button").on("click", function() {
+    //   svg.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
+    // });
   });
 }
 
