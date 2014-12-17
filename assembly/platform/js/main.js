@@ -27,16 +27,16 @@ function comment_histogram(upper_bound){
     upper_bound = typeof upper_bound !== 'undefined' ? upper_bound : 20160;
     // keep products with response less than 14 days
     data = data.filter(function(d){return d.cr < upper_bound});
-    data = data.map(function(d){return d.cr/60});
+    data = data.map(function(d){return d.cr/60/24});
 
     data_graphic({
-      title: "Product responsiveness (hours)",
+      title: "Product responsiveness (days)",
       data: data,
       chart_type: 'histogram',
       width: trunk.width * 2,
       height: trunk.height * 2,
       right: trunk.right,
-      bins: 50,
+      bins: 12,
       bar_margin: 5,
       target: '#responsiveness-bins',
       x_accessor: 'cr',
@@ -58,7 +58,21 @@ function bullets(){
       .width(width)
       .height(height);
 
-  d3.json("./responsiveness_bullets.json", function(error, data) {
+  d3.json("./comment_bullets.json", function(error, data) {
+
+    data = data.filter(function(d){return d.comment_count > 10});
+    data = data.sort(function(a, b){
+      return a.measures[0] - b.measures[0]
+    });
+    data = data.map(function(d){
+      d.measures = [d.measures[0]/60/60/24];
+      d.ranges = d.ranges.map(function(x){
+        return x/60/60/24;
+      });
+      d.markers = [d.markers[0]/60/60/24];
+      return d;
+    });
+
     var svg = d3.select("#responsiveness-bullets").selectAll("svg")
         .data(data)
       .enter().append("svg")
@@ -177,6 +191,7 @@ $(document).ready(function() {
 
   comment_histogram();
   // bubble_chart();
+  bullets();
 
   //replace all SVG images with inline SVG
   //http://stackoverflow.com/questions/11978995/how-to-change-color-of-svg
