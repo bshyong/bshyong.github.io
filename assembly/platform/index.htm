@@ -41,6 +41,9 @@ text.value{font-size:12px;font-weight:bold;}
 .bullet .measure.s1 { fill: steelblue; }
 .bullet .title { font-size: 14px; font-weight: bold; }
 .bullet .subtitle { fill: #999; }
+label.control-label{
+    font-size:14px;
+}
 </style>
 
 </head>
@@ -57,23 +60,26 @@ text.value{font-size:12px;font-weight:bold;}
         <div id='trunk'>
             <div class='row trunk-section'>
                 <div class='col-lg-4'>
-                    <h2 class='trunk-title'>Responsiveness Distribution</h2>
+                    <h2 class='trunk-title'>Responsiveness Histogram</h2>
                     <p>X-axis is in days. Measures the amount of time it takes for a comment to receive a response on a product.</p>
                     <form class="form-horizontal" role="form">
                       <div class="form-group">
-                        <label for="bins" class="col-sm-2 control-label"># of bins</label>
-                        <div class="col-sm-10">
-                          <input class="form-control" id="bins" placeholder="# of bins" value="12">
+                        <div class="col-sm-3">
+                          <input class="form-control" id="bins" placeholder="# of bins" value="12" style="margin-top:7px;">
+                        </div>
+                        <label for="bins" class="col-sm-9 control-label" style="text-align:left;"># of bins</label>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-3">
+                          <input class="form-control" id="upperbound" placeholder="upper bound (days)" value="14" style="margin-top:7px;">
+                        </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                        <label for="upperbound" class="control-label">upper bound (days)</label>
+                            <p>only show products with response time less than upperbound</p>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label for="upperbound" class="col-sm-2 control-label">upper bound (days)</label>
-                        <div class="col-sm-10">
-                          <input class="form-control" id="upperbound" placeholder="upper bound (days)" value="14">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                        <div class="col-sm-12" style="text-align:right;">
                           <button type="submit" class="btn btn-default" id="update">Update</button>
                         </div>
                       </div>
