@@ -51,6 +51,37 @@
 				}
 				</style>
 
+				<script>
+					var adds_dels = {};
+					var total_adds = 0;
+					var total_dels = 0;
+
+					$(document).ready(function(){
+						$.getJSON('data/adds_dels.json', function(data){
+							$.each(data, function(key, val){
+								adds_dels[key] = {}
+								adds_dels[key].adds = 0
+								adds_dels[key].dels = 0
+
+								var index = 0
+
+								for (index = 0; index < val.length; ++index){
+									adds_dels[key].adds += val[index][1];
+									adds_dels[key].dels += val[index][2];
+								}
+							});
+						});
+						$.getJSON('data/adds_dels_aggregate.json', function(data){
+							$.each(data, function(key, val){
+								total_adds += parseInt(data[key]["adds"])
+								total_dels += parseInt(data[key]["dels"])
+							});
+						});
+					});
+
+
+				</script>
+
 				<div class="box alt container">
 					<section class="feature left">
 						<a class="image icon">
