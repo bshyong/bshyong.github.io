@@ -20,7 +20,7 @@ repo_names.each do |r|
   while (stat = Octokit.participation_stats("asm-products/#{r}")).nil?
     sleep(1)
   end
-  repo_stats["r"] = stat
+  repo_stats["#{r}"] = stat.to_hash
 end
 
 File.open("repo_stats.json","w") do |f|
@@ -53,7 +53,19 @@ repo_names.each do |r|
   while (stats = Octokit.contributors_stats("asm-products/#{r}")).nil?
     sleep(1)
   end
-  leaders[r] = stats
+  stat_hash = {}
+  begin
+    stats.first.each do |k,v|
+      if k == :weeks
+        stat_hash[k] = v.map{|x| x.to_hash}
+      else
+        stat_hash[k] = v.to_hash rescue v
+      end
+    end
+    leaders["#{r}"] = stat_hash
+  rescue
+    puts "error with #{r}"
+  end
 end
 
 File.open("leaders.json","w") do |f|
