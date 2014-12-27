@@ -19,6 +19,7 @@
     <script src='js/metricsgraphics.min.js'></script>
     <script src='js/bullets.js'></script>
     <script src='js/main.js'></script>
+    <script src='bootstrap.js'></script>
 
 <style type="text/css">
 body{font-family: Arial, sans-serif;font-size:10px;}
@@ -28,7 +29,6 @@ body{font-family: Arial, sans-serif;font-size:10px;}
 g.journal.active{cursor:pointer;}
 text.label{font-size:12px;font-weight:bold;cursor:pointer;}
 text.value{font-size:12px;font-weight:bold;}
-
 
 /*bullets*/
 .bullet { font: 10px sans-serif; }
@@ -62,21 +62,41 @@ label.control-label{
                 <div class='col-lg-4'>
                     <h2 class='trunk-title'>Responsiveness Histogram</h2>
                     <p>X-axis is in days. Measures the amount of time it takes for a comment to receive a response on a product.</p>
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" role="form" id="histo_options">
                       <div class="form-group">
                         <div class="col-sm-3">
-                          <input class="form-control" id="bins" placeholder="# of bins" value="12" style="margin-top:7px;">
+                          <input class="form-control" id="bins" placeholder="# of bins" value="50" style="margin-top:7px;">
                         </div>
                         <label for="bins" class="col-sm-9 control-label" style="text-align:left;"># of bins</label>
                       </div>
                       <div class="form-group">
                         <div class="col-sm-3">
-                          <input class="form-control" id="upperbound" placeholder="upper bound (days)" value="14" style="margin-top:7px;">
+                          <input class="form-control" id="upperbound" placeholder="upper bound (hours)" value="240" style="margin-top:7px;">
                         </div>
                         <div class="col-sm-9" style="text-align:left;">
-                        <label for="upperbound" class="control-label">upper bound (days)</label>
+                        <label for="upperbound" class="control-label">upper bound (hours)</label>
                             <p>only show products with response time less than upperbound</p>
                         </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-3">
+                          <input class="form-control" id="lowerbound" placeholder="upper bound (hours)" value="0" style="margin-top:7px;">
+                        </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                        <label for="lowerbound" class="control-label">lower bound (hours)</label>
+                            <p>only show products with response time greater than lowerbound</p>
+                        </div>
+                      </div>
+                      <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default active">
+                          <input type="radio" name="filtertype" id="option1" autocomplete="off" checked>All
+                        </label>
+                        <label class="btn btn-default">
+                          <input type="radio" name="filtertype" id="option2" autocomplete="off"> Core
+                        </label>
+                        <label class="btn btn-default">
+                          <input type="radio" name="filtertype" id="option3" autocomplete="off"> Noncore
+                        </label>
                       </div>
                       <div class="form-group">
                         <div class="col-sm-12" style="text-align:right;">
@@ -92,7 +112,7 @@ label.control-label{
                     </div>
                 </div>
             </div>
-            <div class='row trunk-section'>
+            <div class='row trunk-section' style="display:none;">
                 <div class='col-lg-12'>
                     <h2 class='trunk-title'>Product responsiveness</h2>
                     <p>Ranges show 3, 5, 7, 14 days respectively. Blue shows current measurement. Black marker shows mean across all Assembly products.</p>
@@ -114,10 +134,15 @@ label.control-label{
         $('#update').click(function(e){
             e.preventDefault();
             var bins = parseInt($('#bins').val());
-            var days = parseInt($('#upperbound').val()) * 24 * 60;
-            bins = isNaN(bins) ? 12 : bins;
-            days = isNaN(days) ? 20160 : days;
-            comment_histogram(bins, days);
+            var upperbound_hours = parseInt($('#upperbound').val()) * 60 * 60;
+            var lowerbound_hours = parseInt($('#lowerbound').val()) * 60 * 60;
+            var filtertype = $('input[name=filtertype]:checked', '#histo_options').parent().text().trim().toLowerCase();
+            
+            bins = isNaN(bins) ? 50 : bins;
+            upperbound_hours = isNaN(upperbound_hours) ? 864000 : upperbound_hours;
+            lowerbound_hours = isNaN(lowerbound_hours) ? 0 : lowerbound_hours;
+
+            comment_histogram(bins, lowerbound_hours, upperbound_hours, filtertype);
         });
     });
     </script>

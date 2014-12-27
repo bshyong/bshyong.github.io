@@ -21,30 +21,39 @@ small.top = 20;
 small.xax_count = 5;
 
 
-function comment_histogram(bins, upper_bound){
-  d3.json('./comment_histogram.json', function(data) {
+function comment_histogram(bins, lower_bound, upper_bound, type){
+  d3.json('response_times.json', function(data) {
 
-    bins = typeof bins !== 'undefined' ? bins : 12;
-    upper_bound = typeof upper_bound !== 'undefined' ? upper_bound : 20160;
-    // keep products with response less than 14 days
-    data = data.filter(function(d){return d.cr < upper_bound});
-    data = data.map(function(d){return d.cr/60/24});
+    // data is in seconds!
+    bins = typeof bins !== 'undefined' ? bins : 50;
+    upper_bound = typeof upper_bound !== 'undefined' ? upper_bound : 864000;
+    lower_bound = typeof lower_bound !== 'undefined' ? lower_bound : 1;
+    type = typeof type !== 'undefined' ? type : 'all';
+
+    if (type != 'all'){
+      data = data.filter(function(d){return d.type == type});
+    }
+
+    // keep products with response less than 72 hours
+    data = data.filter(function(d){return d.data < upper_bound && d.data > lower_bound});
+    data = data.map(function(d){return d.data/60/60});
 
     data_graphic({
-      title: "Product responsiveness (days)",
+      title: "Product responsiveness (hours)",
       data: data,
       chart_type: 'histogram',
       width: trunk.width * 2,
       height: trunk.height * 2,
       right: trunk.right,
       bins: bins,
-      bar_margin: 5,
+      bar_margin: 1,
       target: '#responsiveness-bins',
-      x_accessor: 'cr',
+      x_accessor: 'data',
+      // y_scale_type: 'log',
       y_extended_ticks: true,
       rollover_callback: function(d, i) {
           $('#responsiveness-bins svg .active_datapoint')
-              .text('Value: ' + d3.round(d.x,2) +  '   Count: ' + d.y);
+              .text('Value: ' + d3.round(d.x,7) +  '   Count: ' + d.y);
       }
     });
   });
@@ -192,7 +201,7 @@ $(document).ready(function() {
 
   comment_histogram();
   // bubble_chart();
-  bullets();
+  // bullets();
 
   //replace all SVG images with inline SVG
   //http://stackoverflow.com/questions/11978995/how-to-change-color-of-svg
