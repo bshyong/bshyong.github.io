@@ -1,0 +1,157 @@
+<html>
+<head>
+  <title>Swag</title>
+  <script src="http://fb.me/react-0.12.2.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div id="content"></div>
+  <script type="text/jsx">
+    var TextInput = React.createClass({
+      getInitialState: function() {
+        return {value: null};
+      },
+      handleChange: function(e){
+        // use e.target.value if doing something with value
+        // this.setState({value: e.target.value});
+        this.props.updateProductName(e.target.value);
+      },
+      render: function() {
+        return (
+          <div className="form-group">
+            <label htmlFor="productName">Product Name</label>
+            <input type="text" className="form-control" placeholder="Product name" onChange={this.handleChange} />
+          </div>
+        )
+      }
+    });
+
+    var SwagTypeSelector = React.createClass({
+      getInitialState: function() {
+        return {
+          itemRows: [
+            [ {name: "Flag", desc: "The original swag flag"},
+              {name: "Ribbon", desc: "The original swag flag"},
+              {name: "Flag and Text", desc: "The original swag flag"}
+            ],
+            [
+              {name: "Long banner", desc: "Takes up an entire row"}
+            ]
+          ]
+        }
+      },
+      renderRow: function(itemRow) {
+        colwidth = 12/itemRow.length;
+        var itemNodes = itemRow.map(function(item, i) {
+          return (
+            <div className={"col-sm-" + colwidth} key={i}>
+              <div className="thumbnail">
+                <h5>{item.name}</h5>
+                <img width="40px" src="https://treasure.assembly.com/assets/flag-36b9a010cd4cc717cc842a5add1a5f65.svg" />
+                <div className="caption">
+                  <p className="help-block">{item.desc}</p>
+                  </div>
+              </div>
+            </div>
+          );
+        });
+
+        return (
+          <div>
+            {itemNodes}
+          </div>
+        )
+      },
+      render: function() {
+        return (
+          <div>
+            <div className="form-group">
+              <label forHtml="swagTypes">Badge type</label>
+            </div>
+            {this.state.itemRows.map(function(itemRow, i) {
+              return (
+                <div className="row" key={i}>
+                  {this.renderRow.bind(this, itemRow)()}
+                </div>
+              );
+            }, this)}
+          </div>
+        );
+      }
+    });
+
+    var CodeBox = React.createClass({
+      getInitialState: function() {
+        return {
+          productName: "productName",
+          productSlug: "PRODUCT"
+        }
+      },
+      handleFocus: function(e) {
+        e.target.select();
+      },
+      handleMouseUp: function(e) {
+        e.preventDefault();
+      },
+      componentWillReceiveProps: function(newProps) {
+        this.setState({
+            productName: newProps.productName,
+            productSlug: this.slugifiedName(newProps.productName)
+          });
+      },
+      slugifiedName: function(nameString) {
+        return nameString.toString().toLowerCase()
+          .replace(/\s+/g, '-')           // Replace spaces with -
+          .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+          .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+          .replace(/^-+/, '')             // Trim - from start of text
+          .replace(/-+$/, '');            // Trim - from end of text
+      },
+      render: function() {
+
+        var codeString = "<a href='https://assembly.com/" + this.state.productSlug + "?utm_source=coderwall&utm_type=footer'>Built on Assembly</a>"
+
+        return (
+          <div className="form-group">
+            <label htmlFor="codeBox">Code</label>
+            <textarea type="textarea" className="form-control" onFocusCapture={this.handleFocus} onMouseUpCapture={this.handleMouseUp} readOnly value={codeString} rows="4"></textarea>
+          </div>
+        )
+      }
+    });
+
+    var Swag = React.createClass({
+      getInitialState: function() {
+        return {productName: null};
+      },
+      handleInputTextUpdate: function(value) {
+        this.setState({productName: value});
+      },
+      render: function() {
+        return (
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-6 col-sm-offset-3">
+                <h2>Assembly</h2>
+                <TextInput updateProductName={this.handleInputTextUpdate} />
+                <SwagTypeSelector />
+                <CodeBox productName={this.state.productName} />
+              </div>
+            </div>
+          </div>
+        )
+      }
+    });
+
+    React.render(
+      <Swag />,
+      document.getElementById('widget-content')
+    )
+  </script>
+
+<div id="widget-content"></div>
+
+</body>
+</html>
