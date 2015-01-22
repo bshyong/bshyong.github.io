@@ -9,6 +9,12 @@
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css" />
 </head>
 <body>
+
+  <style>
+    .thumbnail.active {
+      outline: solid 2px blue;
+    }
+  </style>
   <div id="content"></div>
   <script type="text/jsx">
     var TextInput = React.createClass({
@@ -30,12 +36,50 @@
       }
     });
 
+    var SwagType = React.createClass({
+      getInitialState: function() {
+        return {
+          active: false,
+          item: this.props.item,
+          colwidth: this.props.colwidth};
+      },
+      componentWillReceiveProps: function(newProps) {
+        this.setState({
+          active: newProps.active
+        });
+      },
+      handleClick: function() {
+        this.props.respondToClick(this);
+      },
+      render: function() {
+        var defaultImage = "https://treasure.assembly.com/assets/flag-36b9a010cd4cc717cc842a5add1a5f65.svg"
+        var classes = (this.state.active ? "active " : '') + "thumbnail"
+
+        return (
+          <div className={this.state.colwidth ? ("col-md-" + this.state.colwidth) : null} onClick={this.handleClick}>
+            <div className={classes}>
+              <h5 style={{margin: "10px"}}>{this.state.item.name}</h5>
+              <div style={{ margin: this.state.item.margin || "15px 5px 0px",
+                        textAlign: "center",
+                        minHeight: this.state.item.minHeight}}>
+                <img width={this.state.item.width || "40px"} src={this.state.item.sampleImage || defaultImage} />
+              </div>
+              {this.state.item.desc ? (<div className="caption">
+              <p className="help-block">{this.state.item.desc}</p>
+              </div>) : null }
+          </div>
+        </div>
+        )
+
+      }
+    });
+
     var SwagTypeSelector = React.createClass({
       getInitialState: function() {
         return {
           itemRows: [
             [ {name: "Flag", desc: "The original swag flag", minHeight: "41px;", width: "25%"},
-              {name: "Flag and Text", desc: "The original swag flag", sampleImage: "flag_text.svg", width: "100%"}
+              {name: "Flag and Text", desc: "The original swag flag", minHeight: "41px;", sampleImage: "flag_text.svg", width: "100%"}
             ],
             [
               {name: "Long banner", desc: "Takes up an entire row", sampleImage: "dark_badge.svg", width: "100%"},
@@ -44,25 +88,18 @@
           ]
         }
       },
+      respondToClick: function(item) {
+        this.setState({activeItem: item});
+      },
       renderRow: function(itemRow) {
         var colwidth = 12/itemRow.length;
         var defaultImage = "https://treasure.assembly.com/assets/flag-36b9a010cd4cc717cc842a5add1a5f65.svg"
 
         var itemNodes = itemRow.map(function(item, i) {
           return (
-            <div className={"col-md-" + colwidth} key={i}>
-              <div className="thumbnail">
-                <h5 style={{margin: "10px"}}>{item.name}</h5>
-                <div style={{margin: item.margin || "15px 5px 0px", textAlign: "center", minHeight: item.minHeight}}>
-                  <img width={item.width || "40px"} src={item.sampleImage || defaultImage} />
-                </div>
-                {item.desc ? (<div className="caption">
-                  <p className="help-block">{item.desc}</p>
-                  </div>) : null }
-              </div>
-            </div>
+            <SwagType item={item} colwidth={colwidth} key={i} active={item==this.state.activeItem} respondToClick={this.respondToClick.bind(this, item)}/>
           );
-        });
+        }, this);
 
         return (
           <div>
