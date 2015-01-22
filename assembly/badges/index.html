@@ -23,7 +23,7 @@
       render: function() {
         return (
           <div className="form-group">
-            <label htmlFor="productName">Product Name</label>
+            <label htmlFor="productName">1. Enter the name of your product</label>
             <input type="text" className="form-control" placeholder="Product name" onChange={this.handleChange} />
           </div>
         )
@@ -34,16 +34,12 @@
       getInitialState: function() {
         return {
           itemRows: [
-            [ {name: "Flag", desc: "The original swag flag"},
-              {name: "Ribbon", desc: "The original swag flag"},
-              {name: "Flag and Text", desc: "The original swag flag"}
+            [ {name: "Flag", desc: "The original swag flag", minHeight: "41px;", width: "25%"},
+              {name: "Flag and Text", desc: "The original swag flag", sampleImage: "flag_text.svg", width: "100%"}
             ],
             [
-              {name: "Long banner", desc: "Takes up an entire row"}
-            ],
-            [
-              {name: "Colored ribbon", desc: "github style", image: "top-right.png", width: "50%"},
-              {name: "Colored ribbon", desc: "github style", image: "bottom-right.png", width: "50%"}
+              {name: "Long banner", desc: "Takes up an entire row", sampleImage: "dark_badge.svg", width: "100%"},
+              {name: "Long banner", desc: "Takes up an entire row", sampleImage: "light_badge.svg", width: "100%"}
             ]
           ]
         }
@@ -54,13 +50,15 @@
 
         var itemNodes = itemRow.map(function(item, i) {
           return (
-            <div className={"col-sm-" + colwidth} key={i}>
+            <div className={"col-md-" + colwidth} key={i}>
               <div className="thumbnail">
-                <h5>{item.name}</h5>
-                <img width={item.width || "40px"} src={item.image || defaultImage} />
-                <div className="caption">
+                <h5 style={{margin: "10px"}}>{item.name}</h5>
+                <div style={{margin: item.margin || "15px 5px 0px", textAlign: "center", minHeight: item.minHeight}}>
+                  <img width={item.width || "40px"} src={item.sampleImage || defaultImage} />
+                </div>
+                {item.desc ? (<div className="caption">
                   <p className="help-block">{item.desc}</p>
-                  </div>
+                  </div>) : null }
               </div>
             </div>
           );
@@ -76,7 +74,7 @@
         return (
           <div>
             <div className="form-group">
-              <label forHtml="swagTypes">Badge type</label>
+              <label forHtml="swagTypes">2. Select a badge type</label>
             </div>
             {this.state.itemRows.map(function(itemRow, i) {
               return (
@@ -119,7 +117,7 @@
       },
       render: function() {
 
-        var codeString = "<a href='https://assembly.com/" + this.state.productSlug + "?utm_source=coderwall&utm_type=footer'>Built on Assembly</a>"
+        var codeString = "<a href='https://assembly.com/" + this.state.productSlug + "?utm_campaign=assemblage&utm_source=" + this.state.productSlug + "&utm_medium=flair_widget&utm_type=TYPE'>Built on Assembly</a>"
 
         return (
           <div className="form-group">
@@ -142,7 +140,7 @@
           <div className="container">
             <div className="row">
               <div className="col-sm-6 col-sm-offset-3">
-                <h2>Assembly</h2>
+                <h2>Assemblage</h2>
                 <TextInput updateProductName={this.handleInputTextUpdate} />
                 <SwagTypeSelector />
                 <CodeBox productName={this.state.productName} />
