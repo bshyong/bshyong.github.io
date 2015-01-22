@@ -5,6 +5,8 @@
   <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
   <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" />
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css" />
 </head>
 <body>
   <div id="content"></div>
@@ -38,18 +40,24 @@
             ],
             [
               {name: "Long banner", desc: "Takes up an entire row"}
+            ],
+            [
+              {name: "Colored ribbon", desc: "github style", image: "top-right.png", width: "50%"},
+              {name: "Colored ribbon", desc: "github style", image: "bottom-right.png", width: "50%"}
             ]
           ]
         }
       },
       renderRow: function(itemRow) {
-        colwidth = 12/itemRow.length;
+        var colwidth = 12/itemRow.length;
+        var defaultImage = "https://treasure.assembly.com/assets/flag-36b9a010cd4cc717cc842a5add1a5f65.svg"
+
         var itemNodes = itemRow.map(function(item, i) {
           return (
             <div className={"col-sm-" + colwidth} key={i}>
               <div className="thumbnail">
                 <h5>{item.name}</h5>
-                <img width="40px" src="https://treasure.assembly.com/assets/flag-36b9a010cd4cc717cc842a5add1a5f65.svg" />
+                <img width={item.width || "40px"} src={item.image || defaultImage} />
                 <div className="caption">
                   <p className="help-block">{item.desc}</p>
                   </div>
@@ -152,6 +160,9 @@
   </script>
 
 <div id="widget-content"></div>
+
+
+
 
 </body>
 </html>
