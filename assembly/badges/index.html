@@ -9,12 +9,12 @@
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css" />
 </head>
 <body>
-
   <style>
     .thumbnail.active {
       outline: solid 2px blue;
     }
   </style>
+
   <div id="content"></div>
   <script type="text/jsx">
     var TextInput = React.createClass({
@@ -62,7 +62,7 @@
               <div style={{ margin: this.state.item.margin || "15px 5px 0px",
                         textAlign: "center",
                         minHeight: this.state.item.minHeight}}>
-                <img width={this.state.item.width || "40px"} src={this.state.item.sampleImage || defaultImage} />
+                <img width={this.state.item.width || "40px"} src={this.state.item.imageURL || defaultImage} />
               </div>
               {this.state.item.desc ? (<div className="caption">
               <p className="help-block">{this.state.item.desc}</p>
@@ -78,18 +78,19 @@
       getInitialState: function() {
         return {
           itemRows: [
-            [ {name: "Flag", desc: "The original swag flag", minHeight: "41px;", width: "25%"},
-              {name: "Flag and Text", desc: "The original swag flag", minHeight: "41px;", sampleImage: "flag_text.svg", width: "100%"}
+            [ {name: "Flag", desc: "The original swag flag", minHeight: "41px;", width: "25%", type: "flag_icon", defaultWidth: "61px", defaultHeight: "38px", transparentImageURL: "flag_text_transparent.svg"},
+          {name: "Flag and Text", desc: "Freedom flag", minHeight: "41px;", imageURL: "flag_text.svg", width: "100%", type: "light_flag_banner", defaultWidth: "243px", defaultHeight: "41px", transparentImageURL: "flag_text_transparent.svg"}
             ],
             [
-              {name: "Long banner", desc: "Takes up an entire row", sampleImage: "dark_badge.svg", width: "100%"},
-              {name: "Long banner", desc: "Takes up an entire row", sampleImage: "light_badge.svg", width: "100%"}
+          {name: "Dark banner", desc: "Resizeable banner", imageURL: "dark_badge.svg", width: "100%", type: "dark_love_banner", defaultWidth: "243px", defaultHeight: "34px", transparentImageURL: "flag_text_transparent.svg"},
+        {name: "Light banner", desc: "Resizeable banner", imageURL: "light_badge.svg", width: "100%", type: "light_love_banner", defaultWidth: "243px", defaultHeight: "34px", transparentImageURL: "flag_text_transparent.svg"}
             ]
           ]
         }
       },
-      respondToClick: function(item) {
+      updateSelectedSwag: function(item) {
         this.setState({activeItem: item});
+        this.props.updateSelectedSwag(item);
       },
       renderRow: function(itemRow) {
         var colwidth = 12/itemRow.length;
@@ -97,7 +98,7 @@
 
         var itemNodes = itemRow.map(function(item, i) {
           return (
-            <SwagType item={item} colwidth={colwidth} key={i} active={item==this.state.activeItem} respondToClick={this.respondToClick.bind(this, item)}/>
+            <SwagType item={item} colwidth={colwidth} key={i} active={item==this.state.activeItem} respondToClick={this.updateSelectedSwag.bind(this, item)}/>
           );
         }, this);
 
@@ -108,18 +109,29 @@
         )
       },
       render: function() {
+        var rows = this.state.itemRows.map(function(itemRow, i) {
+          return (
+            <div className="row" key={i}>
+              {this.renderRow.bind(this, itemRow)()}
+            </div>
+          );
+        }, this)
+
         return (
           <div>
             <div className="form-group">
               <label forHtml="swagTypes">2. Select a badge type</label>
             </div>
-            {this.state.itemRows.map(function(itemRow, i) {
-              return (
-                <div className="row" key={i}>
-                  {this.renderRow.bind(this, itemRow)()}
+            {rows}
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="checkbox" style={{margin: "0px 10px 25px"}} onChange={this.props.toggleTransparency}>
+                  <label>
+                    <input type="checkbox"> Transparent background</input>
+                  </label>
                 </div>
-              );
-            }, this)}
+              </div>
+            </div>
           </div>
         );
       }
@@ -129,7 +141,8 @@
       getInitialState: function() {
         return {
           productName: "productName",
-          productSlug: "PRODUCT"
+          productSlug: "product_slug",
+          swag: {type: 'swag_type', imageURL: 'imageURL'}
         }
       },
       handleFocus: function(e) {
@@ -139,10 +152,16 @@
         e.preventDefault();
       },
       componentWillReceiveProps: function(newProps) {
-        this.setState({
+        if (newProps.productName){
+          this.setState({
             productName: newProps.productName,
             productSlug: this.slugifiedName(newProps.productName)
           });
+        } else if (newProps.swag) {
+          this.setState({swag: newProps.swag})
+        }
+
+        this.setState({transparency: !!newProps.transparency})
       },
       slugifiedName: function(nameString) {
         return nameString.toString().toLowerCase()
@@ -153,12 +172,14 @@
           .replace(/-+$/, '');            // Trim - from end of text
       },
       render: function() {
-
-        var codeString = "<a href='https://assembly.com/" + this.state.productSlug + "?utm_campaign=assemblage&utm_source=" + this.state.productSlug + "&utm_medium=flair_widget&utm_type=TYPE'>Built on Assembly</a>"
+        var imageURL = this.state.transparency ? (this.state.swag.transparentImageURL || this.state.swag.imageURL) : this.state.swag.imageURL
+        var imageString = "<img href='" +
+        imageURL + "' width=" + this.state.swag.defaultWidth + " height=" + this.state.swag.defaultHeight + " />"
+        var codeString = "<a href='https://assembly.com/" + this.state.productSlug + "?utm_campaign=assemblage&utm_source=" + this.state.productSlug + "&utm_medium=flair_widget&utm_content=" + this.state.swag.type + "'>" + imageString + "</a>"
 
         return (
           <div className="form-group">
-            <label htmlFor="codeBox">Code</label>
+            <label htmlFor="codeBox">3. Copy and paste your code snippet into your project</label>
             <textarea type="textarea" className="form-control" onFocusCapture={this.handleFocus} onMouseUpCapture={this.handleMouseUp} readOnly value={codeString} rows="4"></textarea>
           </div>
         )
@@ -172,6 +193,12 @@
       handleInputTextUpdate: function(value) {
         this.setState({productName: value});
       },
+      handleSwagSelection: function(swag) {
+        this.setState({swag: swag})
+      },
+      toggleTransparency: function() {
+        this.setState({transparency: !this.state.transparency})
+      },
       render: function() {
         return (
           <div className="container">
@@ -179,8 +206,8 @@
               <div className="col-sm-6 col-sm-offset-3">
                 <h2>Assemblage</h2>
                 <TextInput updateProductName={this.handleInputTextUpdate} />
-                <SwagTypeSelector />
-                <CodeBox productName={this.state.productName} />
+                <SwagTypeSelector updateSelectedSwag={this.handleSwagSelection} toggleTransparency={this.toggleTransparency}/>
+                <CodeBox productName={this.state.productName} swag={this.state.swag} transparency={this.state.transparency} />
               </div>
             </div>
           </div>
@@ -195,8 +222,6 @@
   </script>
 
 <div id="widget-content"></div>
-
-
 
 
 </body>
