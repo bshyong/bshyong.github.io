@@ -1,0 +1,3 @@
+- [Clarity] Modal with script cannot be x'ed out and copy is unclear about what to do after I deploy the script. We could add empty state text in the modal along the lines of "We haven't received any signups yet—this box will disappear when you receive your first signup. Need help? (helpful link)"
+- [Bug] Script failure: `Uncaught TypeError: Cannot read property 'getAttribute' of null`. This happens because we are looking for a `data-debug` attribute; this should be removed in our production script, otherwise the script does NOT work.
+- [Bug?] Not seeing any calls to signupsumo on blur or submit.

@@ -55,6 +55,7 @@
 					var adds_dels = {};
 					var total_adds = 0;
 					var total_dels = 0;
+					var commits = 0;
 
 					$(document).ready(function(){
 						$.getJSON('data/adds_dels.json', function(data){
@@ -77,7 +78,19 @@
 								total_dels += parseInt(data[key]["dels"])
 							});
 						});
+
+						$.getJSON('data/repo_stats.json', function(data){
+							$.each(data, function(key, val){
+
+
+								// console.log(data[key]["all"].reduce(function(a,b){ return a + b; }));
+								commits += data[key]["all"].reduce(function(a,b){ return a + b; }, 0);
+							});
+						});
+
+
 					});
+
 
 
 				</script>

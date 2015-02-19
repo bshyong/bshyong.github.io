@@ -194,7 +194,7 @@ var CodeBox = React.createClass({
   }
 });
 
-var Swag = React.createClass({
+var BadgePage = React.createClass({
   getInitialState: function() {
     return {productName: null};
   },
@@ -222,6 +222,8 @@ var Swag = React.createClass({
     )
   }
 });
+
+window.BadgesPage = module.exports = BadgesPage
 
 React.render(
 <Swag />,

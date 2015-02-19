@@ -7,5 +7,7 @@ https://assembly.com/helpful/bounties
 https://assembly.com/discover/updates
 https://assembly.com/login
 https://assembly.com/signup
+https://assembly.com/helpful/activity
+
 
 
