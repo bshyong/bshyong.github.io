@@ -9,7 +9,7 @@ var diffbot_token = '2efef432c72b5a923408e04353c39a7c';
 function create_spritz(){
 
      spritz_loader = function() {
-        getURL("https://rawgit.com/Miserlou/OpenSpritz/master/spritz.html", function(data){
+        getURL("https://cdn.rawgit.com/bshyong/bshyong.github.io/master/spritz/spritz.html", function(data){
             var spritzContainer = document.getElementById("spritz_container");
 
             if (!spritzContainer) {
