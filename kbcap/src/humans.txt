@@ -1,0 +1,8 @@
+# TEAM
+
+  Benjamin Shyong -- CTO -- @bshyong
+
+# TECHNOLOGY
+
+  CSS3, HTML5
+  jQuery, Modernizr, Normalize.css, Basscss
